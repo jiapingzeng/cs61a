@@ -109,14 +109,12 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     while score0 < goal and score1 < goal:
         if player == 0:
             score0 += take_turn(strategy0(score0, score1), score1, dice)
-            if is_swap(score0, score1):
-                score0, score1 = score1, score0
-            player = 1
+            if is_swap(score0, score1): score0, score1 = score1, score0
         else:
             score1 += take_turn(strategy1(score1, score0), score0, dice)
-            if is_swap(score1, score0):
-                score1, score0 = score0, score1
-            player = 0
+            if is_swap(score1, score0): score1, score0 = score0, score1
+        player = other(player)
+        say = say(score0, score1)
     # END PROBLEM 5
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
@@ -194,7 +192,14 @@ def announce_highest(who, previous_high=0, previous_score=0):
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    def f(score0, score1):
+        score = score0 - previous_score if who == 0 else score1 - previous_score
+        high = previous_high
+        if score > previous_high:
+            high = score
+            print(score, "point(s)! That's the biggest gain yet for Player", who)
+        return announce_highest(who, high, previous_score + score)
+    return f
     # END PROBLEM 7
 
 
@@ -233,7 +238,12 @@ def make_averaged(fn, num_samples=1000):
     3.0
     """
     # BEGIN PROBLEM 8
-    "*** YOUR CODE HERE ***"
+    def f(*args):
+        sum = 0
+        for i in range(0, num_samples):
+            sum += fn(*args)
+        return sum / num_samples
+    return f
     # END PROBLEM 8
 
 
@@ -247,7 +257,11 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     1
     """
     # BEGIN PROBLEM 9
-    "*** YOUR CODE HERE ***"
+    max, max_i = 0, 1
+    for i in range(1, 11):
+        avg = make_averaged(roll_dice, num_samples)(i, dice)
+        if avg > max: max, max_i = avg, i
+    return max_i
     # END PROBLEM 9
 
 
