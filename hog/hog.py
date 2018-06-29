@@ -114,10 +114,9 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
             score1 += take_turn(strategy1(score1, score0), score0, dice)
             if is_swap(score1, score0): score1, score0 = score0, score1
         player = other(player)
-        say = say(score0, score1)
     # END PROBLEM 5
     # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
+        say = say(score0, score1)
     # END PROBLEM 6
     return score0, score1
 
