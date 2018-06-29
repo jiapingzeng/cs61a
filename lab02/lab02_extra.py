@@ -67,7 +67,7 @@ def count_cond(condition):
     def f(n):
         i, c = 1, 0
         while i <= n:
-            if (condition(i)):
+            if (condition(n, i)):
                 c += 1
             i += 1
         return c
@@ -101,3 +101,13 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    def f(n):
+        def g(x):
+            if n == 0: return x
+            else:
+                r = f(n-1)(x) # function value with 1 less cycle
+                if n % 3 == 1: return f1(r)
+                elif n % 3 == 2: return f2(r)
+                elif n % 3 == 0: return f3(r)
+        return g
+    return f
