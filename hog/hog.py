@@ -323,7 +323,7 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     bacon_score = free_bacon(opponent_score)
     new_score = score + bacon_score
     if (opponent_score > new_score and is_swap(new_score, opponent_score)): return 0
-    elif bacon_score > margin: return 0
+    elif bacon_score >= margin: return 0
     else: return num_rolls
     # END PROBLEM 11
 
