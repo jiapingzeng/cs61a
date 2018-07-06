@@ -48,14 +48,12 @@ test = {
           >>> len(groups)
           2
           >>> [restaurant_name(r) for r in groups[0]]  # Cluster containing Sliver
-          cf1363fd97b3c829eef0cb4794ea5f1a
-          # locked
+          ['Sliver']
           >>> [restaurant_name(r) for r in groups[1]]  # Second cluster
-          9ceb763c2bedb8d868f181b94e5ef759
-          # locked
+          ['La Burrita', 'Thai Basil']
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""

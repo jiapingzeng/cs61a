@@ -48,14 +48,14 @@ def group_by_centroid(restaurants, centroids):
     restaurants closest to the same centroid.
     """
     # BEGIN Question 4
-    "*** YOUR CODE HERE ***"
+    return group_by_first([(find_closest(restaurant_location(r), centroids), r) for r in restaurants])
     # END Question 4
 
 
 def find_centroid(cluster):
     """Return the centroid of the locations of the restaurants in cluster."""
     # BEGIN Question 5
-    "*** YOUR CODE HERE ***"
+    return [mean([restaurant_location(r)[0] for r in cluster]), mean([restaurant_location(r)[1] for r in cluster])]
     # END Question 5
 
 
@@ -70,7 +70,7 @@ def k_means(restaurants, k, max_updates=100):
     while old_centroids != centroids and n < max_updates:
         old_centroids = centroids
         # BEGIN Question 6
-        "*** YOUR CODE HERE ***"
+        centroids = [find_centroid(c) for c in group_by_centroid(restaurants, centroids)]
         # END Question 6
         n += 1
     return centroids
@@ -95,7 +95,14 @@ def find_predictor(user, restaurants, feature_fn):
     ys = [user_rating(user, restaurant_name(r)) for r in restaurants]
 
     # BEGIN Question 7
-    "*** YOUR CODE HERE ***"
+    mean_x = mean(xs)
+    mean_y = mean(ys)
+    sxx = sum([(x - mean_x)**2 for x in xs])
+    syy = sum([(y - mean_y)**2 for y in ys])
+    sxy = sum([(x - mean_x) * (y - mean_y) for (x, y) in zip(xs, ys)])
+    b = sxy / sxx
+    a = mean_y - b * mean_x
+    r_squared = sxy**2 / (sxx * syy)
     # END Question 7
 
     def predictor(restaurant):
@@ -115,7 +122,7 @@ def best_predictor(user, restaurants, feature_fns):
     """
     reviewed = user_reviewed_restaurants(user, restaurants)
     # BEGIN Question 8
-    "*** YOUR CODE HERE ***"
+    return max([find_predictor(user, reviewed, fn) for fn in feature_fns], key=lambda p: p[1])[0]
     # END Question 8
 
 
@@ -131,7 +138,7 @@ def rate_all(user, restaurants, feature_fns):
     predictor = best_predictor(user, ALL_RESTAURANTS, feature_fns)
     reviewed = user_reviewed_restaurants(user, restaurants)
     # BEGIN Question 9
-    "*** YOUR CODE HERE ***"
+    return {restaurant_name(r): user_rating(user, r) if r in reviewed else predictor(r) for r in restaurants}
     # END Question 9
 
 
