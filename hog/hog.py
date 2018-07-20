@@ -21,14 +21,16 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    sum, hasOne, i = 0, False, 0
-    while i < num_rolls:
+    total, hasOne = 0, False
+    for _ in range(0, num_rolls):
         roll = dice()
-        if roll == 1: hasOne = True
-        sum += roll
-        i += 1
-    if hasOne: return 1
-    else: return sum
+        if roll == 1:
+            hasOne = True
+        total += roll
+    if hasOne:
+        return 1
+    else:
+        return total
     # END PROBLEM 1
 
 
@@ -58,8 +60,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
-    if num_rolls == 0: return free_bacon(opponent_score)
-    else: return roll_dice(num_rolls, dice)
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -109,10 +113,12 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     while score0 < goal and score1 < goal:
         if player == 0:
             score0 += take_turn(strategy0(score0, score1), score1, dice)
-            if is_swap(score0, score1): score0, score1 = score1, score0
+            if is_swap(score0, score1):
+                score0, score1 = score1, score0
         else:
             score1 += take_turn(strategy1(score1, score0), score0, dice)
-            if is_swap(score1, score0): score1, score0 = score0, score1
+            if is_swap(score1, score0):
+                score1, score0 = score0, score1
         player = other(player)
     # END PROBLEM 5
     # BEGIN PROBLEM 6
@@ -192,7 +198,10 @@ def announce_highest(who, previous_high=0, previous_score=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     def f(score0, score1):
-        score = score0 - previous_score if who == 0 else score1 - previous_score
+        if who == 0:
+            score = score0 - previous_score
+        else:
+            score = score1 - previous_score
         high = previous_high
         if score > previous_high:
             high = score
@@ -239,7 +248,7 @@ def make_averaged(fn, num_samples=1000):
     # BEGIN PROBLEM 8
     def f(*args):
         sum = 0
-        for i in range(0, num_samples):
+        for _ in range(0, num_samples):
             sum += fn(*args)
         return sum / num_samples
     return f
@@ -256,10 +265,11 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     1
     """
     # BEGIN PROBLEM 9
-    max, max_i = 0, 1
+    max_val, max_i, average_dice = 0, 1, make_averaged(roll_dice, num_samples)
     for i in range(1, 11):
-        avg = make_averaged(roll_dice, num_samples)(i, dice)
-        if avg > max: max, max_i = avg, i
+        avg = average_dice(i, dice)
+        if avg > max_val:
+            max_val, max_i = avg, i
     return max_i
     # END PROBLEM 9
 
@@ -309,7 +319,8 @@ def bacon_strategy(score, opponent_score, margin=8, num_rolls=4):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    if free_bacon(opponent_score) >= margin: return 0
+    if free_bacon(opponent_score) >= margin:
+        return 0
     return num_rolls
     # END PROBLEM 10
 
@@ -322,9 +333,12 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     # BEGIN PROBLEM 11
     bacon_score = free_bacon(opponent_score)
     new_score = score + bacon_score
-    if (opponent_score > new_score and is_swap(new_score, opponent_score)): return 0
-    elif bacon_score >= margin: return 0
-    else: return num_rolls
+    if (opponent_score > new_score and is_swap(new_score, opponent_score)):
+        return 0
+    elif bacon_score >= margin:
+        return 0
+    else:
+        return num_rolls
     # END PROBLEM 11
 
 
