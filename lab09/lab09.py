@@ -10,14 +10,14 @@ def cumulative_sum(t):
     >>> t
     Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
     """
-    if (t.is_leaf()):
-        return t
-    else:
-        total = 0
-        for b in t.branches:
-            total += cumulative_sum(b)
-        t.label = total
-        
+    sum = t.label
+    for b in t.branches:
+        if b.is_leaf():
+            sum += b.label
+        else:
+            cumulative_sum(b)
+            sum += b.label
+    t.label = sum
 
 # Q3
 def leaves(t):
@@ -47,7 +47,15 @@ def insert(bst, v):
     >>> bst
     BST(5, BST(3, BST(1, BST.empty, BST(2)), BST(4)), BST(10, BST(7, BST(6)), BST(11)))
     """
-    "*** YOUR CODE HERE ***"
+    if bst.is_leaf():
+        if v < bst.label: bst.left = BST(v)
+        elif v > bst.label: bst.right = BST(v)
+    elif v < bst.label:
+        if bst.left is BST.empty: bst.left = BST(v)
+        insert(bst.left, v)
+    elif v > bst.label:
+        if bst.right is BST.empty: bst.right = BST(v)
+        insert(bst.right, v)
 
 # Tree class
 class Tree:
