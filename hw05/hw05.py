@@ -171,22 +171,7 @@ def long_paths(t, n):
     >>> long_paths(whole, 4)
     [[0, 11, 12, 13, 14]]
     """
-    if t.is_leaf():
-        return [[t.label]]
-    else:
-        for b in t.branches:
-            return [[t.label] + p for p in long_paths(b, n-1)]
-    """
-    if n == 0:
-        return [[t.label]]
-    elif t.is_leaf():
-        return []
-    else: return [
-        [
-            [t.label] + p for p in long_paths(b, n-1) if p
-        ] for b in t.branches
-    ]
-    """
+    
 
 def add_d_leaves(t, v):
     """Add d leaves containing v to each node at every depth d.
@@ -318,7 +303,12 @@ def make_counter():
     >>> c('b') + c2('b')
     5
     """
-    "*** YOUR CODE HERE ***"
+    dict = {}
+    def counter(s):
+        if s in dict: dict[s] += 1
+        else: dict[s] = 1
+        return dict[s]
+    return counter
 
 def make_withdraw(balance, password):
     """Return a password-protected withdraw function.
