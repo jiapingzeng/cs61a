@@ -560,7 +560,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     # BEGIN Problem EC
     food_cost = 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -574,7 +574,7 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     # BEGIN Problem EC
     food_cost = 6
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):

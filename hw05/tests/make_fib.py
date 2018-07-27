@@ -7,41 +7,30 @@ test = {
         {
           'code': r"""
           scm> (define fib (make-fib))
-          967ec852b56072de79fcad084a3ae169
-          # locked
+          fib
           scm> (fib)
-          c710ce1013f52240259ea23a1deec786
-          # locked
+          0
           scm> (fib)
-          c4b729b50e733e03cc8b3108424860bc
-          # locked
+          1
           scm> (fib)
-          c4b729b50e733e03cc8b3108424860bc
-          # locked
+          1
           scm> (fib)
-          08f487e203b345ff9ef0b79cf2145c45
-          # locked
+          2
           scm> (fib)
-          5bdc1a36916860da425c57de281c2173
-          # locked
+          3
           scm> (fib)
-          8b5c3c1c6a4eaf75cbe5dec8ce3970a7
-          # locked
+          5
           scm> (fib)
-          ba5153e04a98fc31021e0b75d76b0676
-          # locked
+          8
           scm> (fib)
-          4c7d469befb0bece66867ef1104811f8
-          # locked
+          13
           scm> (define fib2 (make-fib))
-          ac1b3f8235b48071cb8a847acbe5fd99
-          # locked
+          fib2
           scm> (fib2)
-          c710ce1013f52240259ea23a1deec786
-          # locked
+          0
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         }
       ],
       'scored': True,

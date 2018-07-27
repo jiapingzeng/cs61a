@@ -171,7 +171,16 @@ def long_paths(t, n):
     >>> long_paths(whole, 4)
     [[0, 11, 12, 13, 14]]
     """
-    
+    paths = []
+    def helper(t, n, path_so_far):
+        if t.is_leaf():
+            if n <= 0:
+                paths.append(path_so_far + [t.label])
+        else:
+            for b in t.branches:
+                helper(b, n-1, path_so_far + [t.label])
+    helper(t, n, [])
+    return paths
 
 def add_d_leaves(t, v):
     """Add d leaves containing v to each node at every depth d.
@@ -205,7 +214,13 @@ def add_d_leaves(t, v):
           10
         10
     """
-    "*** YOUR CODE HERE ***"
+    def helper(t, v, depth):
+        if not t.is_leaf():
+            for b in t.branches:
+                helper(b, v, depth+1)
+        for _ in range(depth):
+            t.branches.append(Tree(v))
+    helper(t, v, 0)
 
 class Tree:
     """
@@ -338,7 +353,21 @@ def make_withdraw(balance, password):
     >>> type(w(10, 'l33t')) == str
     True
     """
-    "*** YOUR CODE HERE ***"
+    attempts = []
+    def withdraw(amount, p):
+        nonlocal balance
+        if len(attempts) < 3:
+            if p == password:
+                if amount > balance:
+                    return 'Insufficient funds'
+                balance = balance - amount
+                return balance
+            else:
+                attempts.append(p)
+                return 'Incorrect password'
+        else:
+            return 'Your account is locked. Attempts: [{0}]'.format(', '.join('\'' + a + '\'' for a in attempts))        
+    return withdraw
 
 def make_joint(withdraw, old_password, new_password):
     """Return a password-protected withdraw function that has joint access to
@@ -378,7 +407,14 @@ def make_joint(withdraw, old_password, new_password):
     >>> make_joint(w, 'hax0r', 'hello')
     "Your account is locked. Attempts: ['my', 'secret', 'password']"
     """
-    "*** YOUR CODE HERE ***"
+    output = withdraw(0, old_password)
+    if type(output) == str:
+        return output
+    def joint_withdraw(amount, p):
+        if p == old_password or p == new_password:
+            return withdraw(amount, old_password)
+        return withdraw(amount, p)
+    return joint_withdraw
 
 ###################
 # Extra questions #
