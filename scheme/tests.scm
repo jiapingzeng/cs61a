@@ -10,7 +10,16 @@
 ;;; *** Add your own tests here! ***
 ;;; ********************************
 ; BEGIN PROBLEM 0
-'replace-this-line
+
+(+ 1 2)
+; expect 3
+
+(* 3 4 (- 5 2) 1)
+; expect 36
+
+(odd? 31)
+; expect #t
+
 ; END PROBLEM 0
 
 ;;; These are examples from several sections of "The Structure

@@ -45,38 +45,32 @@ test = {
           >>> scheme_read(src)  # Returns and removes the next complete expression in src
           Pair(23, Pair(4, nil))
           >>> src.current()
-          94a32bedd6cf1898cd8986f0b4e2d011
-          # locked
+          ')'
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           >>> scheme_read(Buffer(tokenize_lines(['(18 6)'])))
-          050a33077bbae4f681a23354ffb49a9e
-          # locked
+          Pair(18, Pair(6, nil))
           >>> read_line('(18 6)')  # Shorter version of above!
-          050a33077bbae4f681a23354ffb49a9e
-          # locked
+          Pair(18, Pair(6, nil))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
           >>> read_tail(Buffer(tokenize_lines([')'])))
-          c24ff8c9a7d7a50f82648d25a4d8fbb1
-          # locked
+          nil
           >>> read_tail(Buffer(tokenize_lines(['1 2 3)'])))
-          4ced98984f008e5161274d6481e4b568
-          # locked
+          Pair(1, Pair(2, Pair(3, nil)))
           >>> read_tail(Buffer(tokenize_lines(['2 (3 4))'])))
-          b27a7ad8eaed5119cfd16136ceb9ea5a
-          # locked
+          Pair(2, Pair(Pair(3, Pair(4, nil)), nil))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""
@@ -101,14 +95,10 @@ test = {
         {
           'code': r"""
           >>> read_line("(+ (- 2 3) 1)")
-          569af9099ed6ccade3e79b6d955b0405
-          # locked
-          # choice: Pair('+', Pair('-', Pair(2, Pair(3, Pair(1, nil)))))
-          # choice: Pair('+', Pair('-', Pair(2, Pair(3, nil))), Pair(1, nil))
-          # choice: Pair('+', Pair(Pair('-', Pair(2, Pair(3, nil))), Pair(1, nil)))
+          Pair('+', Pair(Pair('-', Pair(2, Pair(3, nil))), Pair(1, nil)))
           """,
           'hidden': False,
-          'locked': True
+          'locked': False
         },
         {
           'code': r"""

@@ -122,7 +122,7 @@ def scheme_read(src):
         # END PROBLEM 1
     elif val in quotes:
         # BEGIN PROBLEM 7
-        "*** YOUR CODE HERE ***"
+        return Pair(quotes[val], Pair(scheme_read(src), nil))
         # END PROBLEM 7
     elif val not in DELIMITERS:
         return val
@@ -145,10 +145,15 @@ def read_tail(src):
         elif src.current() == ')':
             # BEGIN PROBLEM 1
             src.remove_front()
+            return nil
             # END PROBLEM 1
         elif src.current() == '.':
             # BEGIN PROBLEM 2
-            "*** YOUR CODE HERE ***"
+            src.remove_front()
+            val = scheme_read(src)
+            if src.remove_front() == ')':
+                return val
+            raise SyntaxError('More than one items after the dot')
             # END PROBLEM 2
         else:
             # BEGIN PROBLEM 1
