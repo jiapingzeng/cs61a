@@ -9,27 +9,38 @@
 ;;;    Use these three lines to describe
 ;;;    its inner meaning.>
 
-(define (draw-circle r x-pos y-pos)
-  (define (draw-circle-helper theta)
+(define x-center (floor (/ (screen_width) 2)))
+(define y-center (floor (/ (screen_height) 2)))
+
+(define (draw-arc start end r x-pos y-pos)
+  (define (draw-arc-helper theta)
     (if
-      (< theta 360)
-      (begin 
-        (pixelsize 100)
+      (< theta end)
+      (begin
         (pixel
-          (+ x-pos (floor (* r (cos theta))))
-          (+ y-pos (floor (* r (sin theta))))
+          (+ x-pos (floor (* r (cos (radians theta)))))
+          (+ y-pos (floor (* r (sin (radians theta)))))
           "red"
         )
-        (draw-circle-helper (+ theta 20))
+        (draw-arc-helper (+ theta 5))
       )
     )
   )
-  (draw-circle-helper 0)
+  (draw-arc-helper start)
 )
 
 (define (draw)
-  (pixelsize 50)
-  (pixel 0 0 "red")
+  (print (floor (* 200 (cos (radians 45)))))
+  (print (floor (* 200 (sin (radians 45)))))
+  (print (+ x-center (floor (* 200 (cos (radians 45))))))
+  (print (+ y-center (floor (* 200 (sin (radians 45))))))
+  (pixel x-center y-center "red")
+  (pixel 
+    (+ x-center (floor (* 200 (cos (radians 45)))))
+    (+ y-center (floor (* 200 (sin (radians 45)))))
+    "red"
+  )
+  (draw-arc 180 360 200 x-center y-center)
   (exitonclick)
 )
 
