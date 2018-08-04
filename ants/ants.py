@@ -302,11 +302,10 @@ class FireAnt(Ant):
         the current place.
         """
         # BEGIN Problem 5
-        self.armor -= amount
-        if self.armor <= 0:
+        if self.armor <= amount:
             for b in list(self.place.bees):
                 b.reduce_armor(self.damage)
-            self.place.remove_insect(self)
+        Ant.reduce_armor(self, amount)        
         # END Problem 5
 
 class HungryAnt(Ant):
@@ -589,7 +588,9 @@ class LaserAnt(ThrowerAnt):
     name = 'Laser'
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem OPTIONAL
-    implemented = False   # Change to True to view in the GUI
+    food_cost = 10
+    damage = 2
+    implemented = True   # Change to True to view in the GUI
     # END Problem OPTIONAL
 
     def __init__(self, armor=1):
@@ -598,12 +599,24 @@ class LaserAnt(ThrowerAnt):
 
     def insects_in_front(self, hive):
         # BEGIN Problem EC
-        return {}
+        d, place, dist = {}, self.place, 0
+        while place is not hive:
+            if place.ant and place.ant is not self:
+                d[place.ant] = dist
+                if place.ant.is_container:
+                    contained = place.ant.contained_ant
+                    if contained and contained is not self:
+                        d[contained] = dist
+            for bee in place.bees:
+                d[bee] = dist
+            dist += 1
+            place = place.entrance
+        return d
         # END Problem EC
 
     def calculate_damage(self, distance):
         # BEGIN Problem EC
-        return 0
+        return self.damage - 0.2*distance - 0.05*self.insects_shot
         # END Problem EC
 
     def action(self, colony):
