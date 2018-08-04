@@ -9,34 +9,27 @@
 ;;;    Use these three lines to describe
 ;;;    its inner meaning.>
 
-(define (draw)
-  (define (draw-circle r x-pos y-pos)
-    (define (draw-circle-helper theta)
-      (if
-        (< theta 360)
-        (begin 
-          (pixelsize 100)
-          (pixel
-            (+ x-pos (floor (* r (cos theta))))
-            (+ y-pos (floor (* r (sin theta))))
-            "red"
-          )
-          (draw-circle-helper (+ theta 20))
+(define (draw-circle r x-pos y-pos)
+  (define (draw-circle-helper theta)
+    (if
+      (< theta 360)
+      (begin 
+        (pixelsize 100)
+        (pixel
+          (+ x-pos (floor (* r (cos theta))))
+          (+ y-pos (floor (* r (sin theta))))
+          "red"
         )
+        (draw-circle-helper (+ theta 20))
       )
     )
-    (draw-circle-helper 0)
   )
-  (pendown)
-  (setheading 0)
-  (forward 100)
-  (setheading 90)
-  (forward 100)
-  (setheading 180)
-  (forward 100)
-  (setheading 270)
-  (forward 100)
-  (penup)
+  (draw-circle-helper 0)
+)
+
+(define (draw)
+  (pixelsize 50)
+  (pixel 0 0 "red")
   (exitonclick)
 )
 
