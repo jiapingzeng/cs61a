@@ -53,16 +53,19 @@ CREATE TABLE siblings AS
 
 -- Sentences about siblings that are the same size
 CREATE TABLE sentences AS
-  SELECT child1, child2
-  FROM siblings, sizes
-  WHERE siblings.child1 = sizes.name;
+  SELECT child1 || " and " || child2 || " are " || a.size || " siblings"
+  FROM siblings, size_of_dogs as a, size_of_dogs as b
+  WHERE child1 = a.name
+  AND child2 = b.name
+  AND a.size = b.size
+  ORDER BY a.name;
 
 -- Q4 --
 -- Ways to stack 4 dogs to a height of at least 170, ordered by total height
 CREATE TABLE stacks_helper(dogs, stack_height, last_height);
 
 -- Add your INSERT INTOs here
-
+INSERT INTO stacks_helper SELECT name, height, height FROM dogs;
 
 CREATE TABLE stacks AS
   SELECT "REPLACE THIS LINE WITH YOUR SOLUTION";
