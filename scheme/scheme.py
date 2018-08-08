@@ -286,20 +286,12 @@ def do_and_form(expressions, env):
     if not expressions:
         return True
     else:
-        """
-        for _ in range(len(expressions) - 1):
-            first_val = scheme_eval(expressions.first, env, True)
-            if not scheme_truep(first_val):
+        i, last = 0, len(expressions) - 1
+        while i < last:
+            if not scheme_truep(scheme_eval(expressions.first, env)):
                 return False
-            expressions = expressions.second
+            expressions, i = expressions.second, i+1
         return scheme_eval(expressions.first, env, True)
-        """
-        first_val = scheme_eval(expressions.first, env)
-        if not scheme_truep(first_val):
-            return False
-        if expressions.second:
-            return do_and_form(expressions.second, env)
-        return first_val
     # END PROBLEM 13
 
 def do_or_form(expressions, env):
@@ -308,18 +300,17 @@ def do_or_form(expressions, env):
     if not expressions:
         return False
     else:
-        """
-        for _ in range(len(expressions)):
-            first_val = scheme_eval(expressions.first, env)
-            if scheme_truep(first_val):
-                return scheme_eval(expressions.first, env, True)
-            expressions = expressions.second
-        return False
-        """
-        first_val = scheme_eval(expressions.first, env)
-        if scheme_truep(first_val):
-            return first_val
-        return do_or_form(expressions.second, env)
+        i, last = 0, len(expressions) - 1
+        while i < last:
+            val = scheme_eval(expressions.first, env)
+            if scheme_truep(val):
+                return val
+            expressions, i = expressions.second, i+1
+        val = scheme_eval(expressions.first, env, True)
+        if scheme_truep(val):
+            return val
+        else:
+            return False
     # END PROBLEM 13
 
 def do_cond_form(expressions, env):
