@@ -6,10 +6,12 @@
 ; Some utility functions that you may find useful to implement.
 
 (define (cons-all first rests)
-  'replace-this-line)
+  (map (lambda (b) (append (list first) b)) rests)
+)
 
 (define (zip pairs)
-  'replace-this-line)
+  (list (map car pairs) (map cadr pairs))
+)
 
 ;; Problem 17
 ;; Returns a list of two-element lists
@@ -30,8 +32,12 @@
 ;; List all ways to make change for TOTAL with DENOMS
 (define (list-change total denoms)
   ; BEGIN PROBLEM 18
-  'replace-this-line
+  (cond
+    ((or (null? denoms) (< total 0)) nil)
+    ((= total 0) (list ()))
+    (else (append (cons-all (car denoms) (list-change (- total (car denoms)) denoms)) (list-change total (cdr denoms))))
   )
+)
   ; END PROBLEM 18
 
 ;; Problem 19
@@ -48,12 +54,12 @@
 (define (let-to-lambda expr)
   (cond ((atom? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((quoted? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((or (lambda? expr)
@@ -62,18 +68,18 @@
                (params (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (cons form (cons (map let-to-lambda params) (map let-to-lambda body)))
            ; END PROBLEM 19
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (cons (cons `lambda (cons (car (zip (let-to-lambda values))) (let-to-lambda body))) (car (cdr (zip (let-to-lambda values)))))
            ; END PROBLEM 19
            ))
         (else
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         (map let-to-lambda expr)
          ; END PROBLEM 19
          )))

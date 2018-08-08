@@ -60,7 +60,7 @@ def eval_all(expressions, env):
     if expressions.second:
         scheme_eval(expressions.first, env)
         return eval_all(expressions.second, env)
-    return scheme_eval(expressions.first, env)
+    return scheme_eval(expressions.first, env, True)
     # END PROBLEM 8
 
 ################
@@ -235,7 +235,7 @@ def do_define_form(expressions, env):
     if scheme_symbolp(target):
         check_form(expressions, 2, 2)
         # BEGIN PROBLEM 6
-        env.define(target, eval_all(expressions.second, env))
+        env.define(target, scheme_eval(expressions.second.first, env))
         return target
         # END PROBLEM 6
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
@@ -272,9 +272,9 @@ def do_if_form(expressions, env):
     """Evaluate an if form."""
     check_form(expressions, 2, 3)
     if scheme_truep(scheme_eval(expressions.first, env)):
-        return scheme_eval(expressions.second.first, env)
+        return scheme_eval(expressions.second.first, env, True)
     elif len(expressions) == 3:
-        return scheme_eval(expressions.second.second.first, env)
+        return scheme_eval(expressions.second.second.first, env, True)
 
 def do_and_form(expressions, env):
     """Evaluate a (short-circuited) and form."""
@@ -282,12 +282,23 @@ def do_and_form(expressions, env):
     if not expressions:
         return True
     else:
+        if not scheme_truep(scheme_eval(expressions.first, env, True)):
+            return False
+        first_val = True
+        while expressions.second:
+            expressions = expressions.second
+            first_val = scheme_eval(expressions.first, env, True)
+            if not scheme_truep(first_val):
+                return False
+        return first_val
+        """
         first_val = scheme_eval(expressions.first, env)
         if not scheme_truep(first_val):
             return False
         if expressions.second:
             return do_and_form(expressions.second, env)
-        return first_val    
+        return first_val
+        """
     # END PROBLEM 13
 
 def do_or_form(expressions, env):
@@ -296,10 +307,18 @@ def do_or_form(expressions, env):
     if not expressions:
         return False
     else:
+        while expressions:
+            first_val = scheme_eval(expressions.first, env, True)
+            if scheme_truep(first_val):
+                return first_val
+            expressions = expressions.second
+        return False
+        """
         first_val = scheme_eval(expressions.first, env)
         if scheme_truep(first_val):
             return first_val
         return do_or_form(expressions.second, env)
+        """
     # END PROBLEM 13
 
 def do_cond_form(expressions, env):
@@ -337,10 +356,9 @@ def make_let_frame(bindings, env):
     # BEGIN PROBLEM 15
     formals, vals = nil, nil
     while bindings:
-        first_pair = bindings.first
-        check_form(first_pair, 2, 2)
-        formals = Pair(first_pair.first, formals)
-        vals = Pair(scheme_eval(first_pair.second.first, env), vals)
+        check_form(bindings.first, 2, 2)
+        formals = Pair(bindings.first.first, formals)
+        vals = Pair(scheme_eval(bindings.first.second.first, env), vals)
         bindings = bindings.second
     check_formals(formals)
     return env.make_child_frame(formals, vals)
@@ -559,7 +577,9 @@ def optimize_tail_calls(original_scheme_eval):
 
         result = Thunk(expr, env)
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        while isinstance(result, Thunk):
+            result = original_scheme_eval(result.expr, result.env)
+        return result
         # END
     return optimized_eval
 

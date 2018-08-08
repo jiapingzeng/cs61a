@@ -41,18 +41,15 @@
   (hideturtle)
   (penup)
   (setposition -180 -160)
-  ;(Background 5 1000 colorful 60)
-  ;(Background 5 1000 morecolor -60)
+  (Background 5 1000 colorful 60)
+  (Background 5 1000 morecolor -60)
 
-  (color "#0e4d92")
-  (pendown)
-  (setposition -180 -300)
-  (draw-arc 0 220 -300 100 90)
-  (setposition 220 -300)
-  (penup)
+  (color "#90ee90")
+  (begin_fill)
+  (draw-arc 0 300 0 300 360)
+  (end_fill)
 
-  (setposition -150 70)
-
+  ; face
   (color "#45852d")
   (pendown)
   (draw-arc 225 -150 70 200 70)
@@ -65,8 +62,8 @@
   (draw-arc 90 75 -220 120 90)
   (draw-arc 135 -190 -155 265 65)
   
-  (color "red")
-  ; left eye
+  (color "#000000")
+  ; left eye  
   (draw-arc 45 25 60 25 60)
   (draw-arc 290 30 85 200 15)
   (draw-arc 95 -120 70 150 41)
@@ -82,6 +79,8 @@
   (draw-arc 0 123 70 7 360)
   (draw-arc 0 105 70 4 360)
   (draw-arc 0 105 60 2 360)
+  
+  (color "red")
   ;; lips
   (draw-arc 100 -30 -100 500 27)
   (draw-arc 90 200 -105 9 180)

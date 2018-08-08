@@ -20,6 +20,60 @@
 (odd? 31)
 ; expect #t
 
+(define x 100)
+; expect x
+
+x
+; expect 100
+
+(and (null? ()) 1 2 3)
+; expect 3
+
+(and 1 2 #f 3)
+; expect #f
+
+(or (not #t) 1 2 3)
+; expect 1
+
+(or #t #f #f #f)
+; expect #t
+
+(define (f x) (+ x 3))
+; expect f
+
+(f 3)
+; expect 6
+
+'(1 2 3)
+; expect (1 2 3)
+
+'(1 . (2 3))
+; expect (1 2 3)
+
+(cons 1 2)
+; expect (1 . 2)
+
+`(cons ,(cons 1 2) (list 3 4))
+; expect (cons (1 . 2) (list 3 4))
+
+(define (g a b) (* a b))
+; expect g
+
+g
+; expect (lambda (a b) (* a b))
+
+(cond 
+  ((= 1 2) 'qawer)
+  (#f #t)
+  (else 'aaa)
+)
+; expect aaa
+
+(let ((x 1) (y 2))
+  (+ x y)
+)
+; expect 3
+
 ; END PROBLEM 0
 
 ;;; These are examples from several sections of "The Structure
@@ -69,7 +123,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Move the following (exit) line down the file to run additional tests. ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(exit)
 
 
 ;;; 1.1.2
