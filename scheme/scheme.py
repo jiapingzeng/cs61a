@@ -29,12 +29,16 @@ def scheme_eval(expr, env, _=None): # Optional third argument is ignored
     first, rest = expr.first, expr.second
     if scheme_symbolp(first) and first in SPECIAL_FORMS:
         return SPECIAL_FORMS[first](rest, env)
+    # PROBLEM 21
+    elif scheme_symbolp(first) and isinstance(env.lookup(first), MacroProcedure):
+        return scheme_eval(env.lookup(first).apply_macro(rest, env), env)
+    # PROBLEM 21
     else:
         # BEGIN PROBLEM 5
-        check_procedure(scheme_eval(first, env))
         operator = scheme_eval(first, env)
         operands = rest.map(lambda op: scheme_eval(op, env))
-        return scheme_apply(operator, operands, env)
+        check_procedure(operator)
+        return scheme_apply(operator, operands, env) 
         # END PROBLEM 5
 
 def self_evaluating(expr):
@@ -282,15 +286,13 @@ def do_and_form(expressions, env):
     if not expressions:
         return True
     else:
-        if not scheme_truep(scheme_eval(expressions.first, env, True)):
-            return False
-        first_val = True
-        while expressions.second:
-            expressions = expressions.second
+        """
+        for _ in range(len(expressions) - 1):
             first_val = scheme_eval(expressions.first, env, True)
             if not scheme_truep(first_val):
                 return False
-        return first_val
+            expressions = expressions.second
+        return scheme_eval(expressions.first, env, True)
         """
         first_val = scheme_eval(expressions.first, env)
         if not scheme_truep(first_val):
@@ -298,7 +300,6 @@ def do_and_form(expressions, env):
         if expressions.second:
             return do_and_form(expressions.second, env)
         return first_val
-        """
     # END PROBLEM 13
 
 def do_or_form(expressions, env):
@@ -307,10 +308,11 @@ def do_or_form(expressions, env):
     if not expressions:
         return False
     else:
-        while expressions:
-            first_val = scheme_eval(expressions.first, env, True)
+        """
+        for _ in range(len(expressions)):
+            first_val = scheme_eval(expressions.first, env)
             if scheme_truep(first_val):
-                return first_val
+                return scheme_eval(expressions.first, env, True)
             expressions = expressions.second
         return False
         """
@@ -318,7 +320,6 @@ def do_or_form(expressions, env):
         if scheme_truep(first_val):
             return first_val
         return do_or_form(expressions.second, env)
-        """
     # END PROBLEM 13
 
 def do_cond_form(expressions, env):
@@ -367,7 +368,12 @@ def make_let_frame(bindings, env):
 def do_define_macro(expressions, env):
     """Evaluate a define-macro form."""
     # BEGIN Problem 21
-    "*** YOUR CODE HERE ***"
+    check_form(expressions, 2)
+    target = expressions.first
+    if not hasattr(target, "first") or not scheme_symbolp(target.first):
+        raise SchemeError("Not a symbol")
+    env.define(target.first, MacroProcedure(target.second, expressions.second, env))
+    return target.first
     # END Problem 21
 
 def do_set_form(expressions, env):
@@ -586,7 +592,7 @@ def optimize_tail_calls(original_scheme_eval):
 ################################################################
 # Uncomment the following line to apply tail call optimization #
 ################################################################
-# scheme_eval = optimize_tail_calls(scheme_eval)
+scheme_eval = optimize_tail_calls(scheme_eval)
 
 
 ####################
